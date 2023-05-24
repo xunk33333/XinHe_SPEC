@@ -1,4 +1,5 @@
 import os
+import re
 import shutil
 
 from extract.cellsearch import exceltool
@@ -7,62 +8,35 @@ def extractTable(pdfPath, pageNumber, tableselectRec, outputPath):
     exe = exceltool()
     exe.get_table_from_pdf(pdfPath, pageNumber, tableselectRec, 'tmp.xlsx')
     data = {}
-
+    def matchKeyNameValue(exe,data,keyword = 'e',name = 'Pads_pitch'):
+        cell = exe.cellsearch(keyword,True)
+        if cell is not None:
+            row = cell.row
+            col = cell.col_idx
+            tmp = [exe.get_cell(row, col+x).value for x in range(1,4)]
+            if  tmp[0] is not None and tmp[1] is not None and tmp[2] is None: #min #max
+                data[name] = (float(re.sub(r"[A-Za-z]","",tmp[0]))+float(re.sub(r"[A-Za-z]","",tmp[1])))/2    
+            elif tmp[0] is not None and tmp[1] is None and tmp[2] is None:#BSC
+                data[name] = tmp[0]
+            elif tmp[0] is not None and tmp[1] is  None and tmp[2] is not None:#min #max
+                data[name] = (float(re.sub(r"[A-Za-z]","",tmp[0]))+float(re.sub(r"[A-Za-z]","",tmp[2])))/2 
+            else:
+                data[name] = tmp[1]
+        else:
+            data[name] = None
     #
-    keyword = 'e'
-    a = exe.cellsearch(keyword,True)
-    i = a.row
-    j = a.col_idx + 1 
-    data['Pads_pitch'] = exe.get_cell(i, j).value
+    matchKeyNameValue(exe,data,keyword = 'e',name = 'Pads_pitch')
+    matchKeyNameValue(exe,data,keyword = 'b',name = 'Pads_width')
+    matchKeyNameValue(exe,data,keyword = 'L',name = 'Pads_length')
+    matchKeyNameValue(exe,data,keyword = 'D2',name = 'EPad_width')
+    matchKeyNameValue(exe,data,keyword = 'E2',name = 'EPad_length')
+    if data['EPad_width'] is not None and data['EPad_length'] is not None:
+        data['EPad_epad'] = "True"
+    else:
+        data['EPad_epad'] = "False"
+    matchKeyNameValue(exe,data,keyword = 'D',name = 'Package_width')
+    matchKeyNameValue(exe,data,keyword = 'E',name = 'Package_length')
 
-    #
-    keyword = 'b'
-    a = exe.cellsearch(keyword,True)
-    i = a.row
-    j = a.col_idx + 2
-    data['Pads_width'] = exe.get_cell(i, j).value
-
-
-    #
-    keyword = 'L'
-    a = exe.cellsearch(keyword,True)
-    i = a.row
-    j = a.col_idx + 2
-    data['Pads_length'] = exe.get_cell(i, j).value
- 
-   #
-    keyword = 'D2'
-    a = exe.cellsearch(keyword,True)
-    i = a.row
-    j = a.col_idx + 2
-    data['EPad_width'] = exe.get_cell(i, j).value
-
-    #
-    keyword = 'E2'
-    a = exe.cellsearch(keyword,True)
-    i = a.row
-    j = a.col_idx + 2
-    data['EPad_length'] = exe.get_cell(i, j).value
-    
-    #
-    keyword = 'D'
-    a = exe.cellsearch(keyword,True)
-    i = a.row
-    j = a.col_idx + 2
-    data['Package_width'] = exe.get_cell(i, j).value
-     
-
-    #
-    keyword = 'E'
-    a = exe.cellsearch(keyword,True)
-    i = a.row
-    j = a.col_idx + 2
-    data['Package_width'] = exe.get_cell(i, j).value
-     
-
-   
-     
-    
     #结果导出
     name = pdfPath[pdfPath.rindex('/') + 1:-4]
     import pandas as pd
@@ -78,6 +52,7 @@ def extractTable(pdfPath, pageNumber, tableselectRec, outputPath):
     else:
         save_path = outputPath + '/' + name + \
             '_page_' + str(pageNumber - 1 + 1) + ".csv"
+        os.remove('tmp.xlsx')
     df.to_csv(path_or_buf=save_path, sep=',', header=True, index=False)
 
 

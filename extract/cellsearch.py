@@ -1,4 +1,5 @@
 
+import re
 import openpyxl
 import pdfplumber
 import pandas as pd
@@ -84,7 +85,8 @@ class exceltool:
         print(table)
 
         if table:
-            
+            table = [[None if x.__eq__('–') or x.__eq__('—') else x.replace(" ","") for x in y] for y in table]
+
             df_detail = pd.DataFrame(table[1:], columns=table[0])
             result_df = pd.concat([df_detail, result_df], ignore_index=True)
             result_df.dropna(axis=1, how='all', inplace=True)
