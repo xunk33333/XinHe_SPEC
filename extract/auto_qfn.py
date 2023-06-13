@@ -30,12 +30,23 @@ def extractTable(pdfPath, pageNumber, tableselectRec, outputPath):
     matchKeyNameValue(exe,data,keyword = 'L',name = 'Pads_length')
     matchKeyNameValue(exe,data,keyword = 'D2',name = 'EPad_width')
     matchKeyNameValue(exe,data,keyword = 'E2',name = 'EPad_length')
+
+    #针对D2/E2特殊情况
+    if data['EPad_width'] is  None and data['EPad_length'] is  None:
+        matchKeyNameValue(exe,data,keyword = 'D2/E2',name = 'EPad_width')
+        matchKeyNameValue(exe,data,keyword = 'D2/E2',name = 'EPad_length')
+
     if data['EPad_width'] is not None and data['EPad_length'] is not None:
         data['EPad_epad'] = "True"
     else:
         data['EPad_epad'] = "False"
     matchKeyNameValue(exe,data,keyword = 'D',name = 'Package_width')
     matchKeyNameValue(exe,data,keyword = 'E',name = 'Package_length')
+
+    #针对D/E特殊情况
+    if data['Package_width'] is  None and data['Package_length'] is  None:
+        matchKeyNameValue(exe,data,keyword = 'D/E',name = 'Package_width')
+        matchKeyNameValue(exe,data,keyword = 'D/E',name = 'Package_length')
 
     #结果导出
     name = pdfPath[pdfPath.rindex('/') + 1:-4]

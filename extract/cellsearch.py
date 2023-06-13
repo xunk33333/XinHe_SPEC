@@ -8,7 +8,7 @@ import xlsxwriter
 import camelot
 import fitz
 import os
-
+from extract.ttable import Table
 class exceltool:
     def __init__(self):
         self.pdf_path = ''                          # 需要提取表格的pdf文件位置
@@ -57,7 +57,6 @@ class exceltool:
         sht1 = xls2.add_worksheet()
         xls2.close()                              # savepath:表格保存位置
 
-        result_df = pd.DataFrame()
         
         pdf = pdfplumber.open(pdfPath)                            # readpath:PDF所在位置
         page = pdf.pages[pageNumber-1]
@@ -83,14 +82,12 @@ class exceltool:
 
         table = page.extract_table(table_setting)
         print(table)
-
         if table:
-            table = [[None if x.__eq__('–') or x.__eq__('—') else x.replace(" ","") for x in y] for y in table]
-
-            df_detail = pd.DataFrame(table[1:], columns=table[0])
-            result_df = pd.concat([df_detail, result_df], ignore_index=True)
-            result_df.dropna(axis=1, how='all', inplace=True)
-            result_df.to_excel(excel_writer=outputPath, index=False, encoding='utf-8')
+            table = Table(table)
+            table.filterTableData()
+            table.tryReverse()
+            table.toExcel(outputPath)
+            
             self.set_execel_path(outputPath)
 
 
