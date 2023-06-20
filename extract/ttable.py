@@ -28,8 +28,5 @@ class Table(object):
         print("####该表进行了行列转换#####")
     
     def toExcel(self,outputPath):
-            result_df = pd.DataFrame()
             df_detail = pd.DataFrame(self.tableData[1:], columns=self.tableData[0])
-            result_df = pd.concat([df_detail, result_df], ignore_index=True)
-            result_df.dropna(axis=1, how='all', inplace=True)
-            result_df.to_excel(excel_writer=outputPath, index=False, encoding='utf-8')
+            df_detail.to_excel(excel_writer=outputPath, index=False, encoding='utf-8')
