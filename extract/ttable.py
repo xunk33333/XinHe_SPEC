@@ -15,7 +15,7 @@ class Table(object):
             if x.__contains__("/") and x.__contains__("."):
                 x = x[:x.index("/")]
 
-            return x.replace(" ","").replace("\n","")
+            return x.replace(" ","").replace("\n","").replace("BSC","").replace("TYP","")
         self.tableData = [[filterTableData__(x) for x in y] for y in self.tableData]
 
     def tryReverse(self):
