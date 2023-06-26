@@ -14,8 +14,9 @@ from PyQt5.QtWidgets import QVBoxLayout, QFileDialog, QInputDialog, QLabel, \
 import os
 import fitz
 import pdfplumber
+from extract.auto_bga import extractTableBGA
 
-from extract.auto_qfn import extractTable,del_dir
+from extract.auto_qfn import extractTableQFN,del_dir
 from extract_test.mydatabase import MyDb
 from extract_test.manual_boxes import DrawRects, WIN_NAME, onmouse_draw_rect
 
@@ -126,8 +127,8 @@ class PDFReader(QMainWindow):
         turnPage = QAction(QIcon('extract_test/icon/跳转.png'), '跳转', self.toolbar)
         enlargePage = QAction(QIcon('extract_test/icon/放大 (1).png'), '放大', self.toolbar)
         shrinkPage = QAction(QIcon('extract_test/icon/缩小.png'), '缩小', self.toolbar)
-        Pdf2txt = QAction(QIcon('extract_test/icon/阅读.png'), '显示文本', self.toolbar)
-        extractTable = QAction(QIcon('extract_test/icon/阅读.png'), '显示文本', self.toolbar)
+        Pdf2txt = QAction(QIcon('extract_test/icon/阅读.png'), 'BGA提取', self.toolbar)
+        extractTable = QAction(QIcon('extract_test/icon/阅读.png'), 'QFN提取', self.toolbar)
 
         nextPage.setShortcut(Qt.Key_Right)
         prePage.setShortcut(Qt.Key_Left)
@@ -331,7 +332,7 @@ class PDFReader(QMainWindow):
         pageNumber = self.page_num + 1
         selectRec = box
         try:
-            extractPackage(pdfPath, pageNumber, selectRec, outputPath)
+            extractTableBGA(pdfPath, pageNumber, selectRec, outputPath)
         except:
             traceback.print_exc()
         finally:
@@ -371,7 +372,7 @@ class PDFReader(QMainWindow):
         pageNumber = self.page_num + 1
         tableselectRec = box
         try:
-            extractTable(pdfPath, pageNumber, tableselectRec, outputPath)
+            extractTableQFN(pdfPath, pageNumber, tableselectRec, outputPath)
         except:
             traceback.print_exc()
         finally:

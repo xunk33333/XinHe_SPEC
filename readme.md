@@ -1,3 +1,11 @@
+# （0626）代码版本改动
+1. 新增了BGA的接口 extractTableBGA
+2. 修改了之前QFN接口名称 extractTable -> extractTableQFN
+3. 测试界面的按钮第一个是BGA，第二个QFN
+# （0621）代码版本改动
+## 修复问题
+1. 修复取NOM的bug（ATTINY24A.pdf ->P14）
+2. 去掉了结果中的BSC和TYP
 # （0613）代码版本改动
 ## 修复问题
 1. 纵向表头类型识别错误（efm32g-datasheet_5tables_page_190）
