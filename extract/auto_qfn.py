@@ -1,8 +1,10 @@
 import os
 import re
 import shutil
-
-from extract.cellsearch import exceltool
+import sys
+__dir__ = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(__dir__)
+from cellsearch import exceltool
 
 def extractTableQFN(pdfPath, pageNumber, tableselectRec, outputPath): 
     exe = exceltool()
@@ -64,6 +66,7 @@ def extractTableQFN(pdfPath, pageNumber, tableselectRec, outputPath):
         save_path = outputPath + '/' + name + \
             '_page_' + str(pageNumber - 1 + 1) + ".csv"
         os.remove('tmp.xlsx')
+        del_dir("tableDet")
     df.to_csv(path_or_buf=save_path, sep=',', header=True, index=False)
 
 

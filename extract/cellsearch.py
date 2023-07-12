@@ -9,6 +9,7 @@ import camelot
 import fitz
 import os
 from extract.ttable import Table
+from extract.enableEdit import pipline
 class exceltool:
     def __init__(self):
         self.pdf_path = ''                          # 需要提取表格的pdf文件位置
@@ -57,31 +58,35 @@ class exceltool:
         sht1 = xls2.add_worksheet()
         xls2.close()                              # savepath:表格保存位置
 
-        
-        pdf = pdfplumber.open(pdfPath)                            # readpath:PDF所在位置
-        page = pdf.pages[pageNumber-1]
-        page = page.crop(tableselectRec)
-        table_setting = {
-        "vertical_strategy": "lines", 
-        "horizontal_strategy": "lines",
-        "explicit_vertical_lines": [],
-        "explicit_horizontal_lines": [],
-        "snap_tolerance": 5,
-        "join_tolerance": 3,
-        "edge_min_length": 3,
-        "min_words_vertical": 1,
-        "min_words_horizontal": 1,
-        "keep_blank_chars": False,
-        "text_tolerance": 0,
-        "text_x_tolerance": 0,
-        "text_y_tolerance": 0,
-        "intersection_tolerance": 3,
-        "intersection_x_tolerance": 3,
-        "intersection_y_tolerance": 3,
-        }
+        ##########################改注释区域是修改跨页之前的提取表格的代码################################        
+        # pdf = pdfplumber.open(pdfPath)                            # readpath:PDF所在位置
+        # page = pdf.pages[pageNumber-1]
+        # page = page.crop(tableselectRec)
+        # table_setting = {
+        # "vertical_strategy": "lines", 
+        # "horizontal_strategy": "lines",
+        # "explicit_vertical_lines": [],
+        # "explicit_horizontal_lines": [],
+        # "snap_tolerance": 5,
+        # "join_tolerance": 3,
+        # "edge_min_length": 3,
+        # "min_words_vertical": 1,
+        # "min_words_horizontal": 1,
+        # "keep_blank_chars": False,
+        # "text_tolerance": 0,
+        # "text_x_tolerance": 0,
+        # "text_y_tolerance": 0,
+        # "intersection_tolerance": 3,
+        # "intersection_x_tolerance": 3,
+        # "intersection_y_tolerance": 3,
+        # }
 
-        table = page.extract_table(table_setting)
-        print(table)
+        # table = page.extract_table(table_setting)
+        #############################################################################################
+
+        table = pipline(pdfPath, pageNumber-1)
+
+        # print(table)
         if table:
             table = Table(table)
             table.filterTableData()

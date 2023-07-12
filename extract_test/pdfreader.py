@@ -338,45 +338,47 @@ class PDFReader(QMainWindow):
         finally:
             del_dir('{}'.format(name))
     def extracttable(self):
-        page = self.doc[self.page_num]
-        name = self.file_path[self.file_path.rindex('/') + 1:-4]
-        scale_factor = 4
-        pix = page.get_pixmap(matrix=fitz.Matrix(scale_factor, scale_factor).prerotate(0))
-        img_path = r"{}/{}.png".format(name, self.page_num)
-        if not os.path.exists(name):  # 判断存放图片的文件夹是否存在
-            os.makedirs(name)  # 若图片文件夹不存在就创建
-        pix.save(img_path)
+        # page = self.doc[self.page_num]
+        # name = self.file_path[self.file_path.rindex('/') + 1:-4]
+        # scale_factor = 4
+        # pix = page.get_pixmap(matrix=fitz.Matrix(scale_factor, scale_factor).prerotate(0))
+        # img_path = r"{}/{}.png".format(name, self.page_num)
+        # if not os.path.exists(name):  # 判断存放图片的文件夹是否存在
+        #     os.makedirs(name)  # 若图片文件夹不存在就创建
+        # pix.save(img_path)
 
-        image = cv2.imread(img_path)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        draw_rects = DrawRects(image, (0, 255, 0), 2)
-        cv2.namedWindow(WIN_NAME, 0)
-        cv2.setMouseCallback(WIN_NAME, onmouse_draw_rect, draw_rects)
+        # image = cv2.imread(img_path)
+        # image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        # draw_rects = DrawRects(image, (0, 255, 0), 2)
+        # cv2.namedWindow(WIN_NAME, 0)
+        # cv2.setMouseCallback(WIN_NAME, onmouse_draw_rect, draw_rects)
 
-        while True:
-            cv2.imshow(WIN_NAME, draw_rects.image_for_show)
-            key = cv2.waitKey(30)
-            if key == 13:  # Enter    
-                break
-        cv2.destroyAllWindows()
+        # while True:
+        #     cv2.imshow(WIN_NAME, draw_rects.image_for_show)
+        #     key = cv2.waitKey(30)
+        #     if key == 13:  # Enter    
+        #         break
+        # cv2.destroyAllWindows()
 
         
         
-        bugBox = draw_rects.rects[0].tl + draw_rects.rects[0].br
-        print("圈得到得区域范围:" + str(bugBox))
+        # bugBox = draw_rects.rects[0].tl + draw_rects.rects[0].br
+        # print("圈得到得区域范围:" + str(bugBox))
 
-        box = [x / scale_factor for x in bugBox]
+        # box = [x / scale_factor for x in bugBox]
 
         pdfPath = self.file_path
         outputPath = f"result"
         pageNumber = self.page_num + 1
-        tableselectRec = box
+        # tableselectRec = box
         try:
-            extractTableQFN(pdfPath, pageNumber, tableselectRec, outputPath)
+            # extractTableQFN(pdfPath, pageNumber, tableselectRec, outputPath)
+            extractTableQFN(pdfPath, pageNumber, [], outputPath)
         except:
             traceback.print_exc()
         finally:
-            del_dir('{}'.format(name))
+            # del_dir('{}'.format(name))
+            pass
 
         
 

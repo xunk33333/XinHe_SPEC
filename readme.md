@@ -1,3 +1,7 @@
+# （0712）代码版本改动
+   1. 对QFN类型的提取，加入了表格自动检测，解放双手，不再需要手动框选表格位置
+   2. 并额外的加入了跨页表格的提取
+   3. 目前只针对QFN，BGA暂时未作改动
 # （0626）代码版本改动
 1. 新增了BGA的接口 extractTableBGA
 2. 修改了之前QFN接口名称 extractTable -> extractTableQFN
